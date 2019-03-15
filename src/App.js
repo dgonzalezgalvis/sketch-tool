@@ -71,11 +71,20 @@ class Point extends React.Component {
     super(props);
 
     this.state = {
-      color: 'black',
+      color: 'red',
       ...this.state,
       x: this.props.x,
       y: this.props.y,
+      index: this.props.index
     };
+  }
+
+  updatePosition = (x, y) => {
+    this.setState({
+      ...this.state,
+      x,
+      y,
+    });
   }
 
   render() {
@@ -88,8 +97,9 @@ class Point extends React.Component {
           radius={5}
           fill={this.state.color}
           shadowBlur={5}
-          draggable={false}
+          draggable={true}
           onClick={this.props.click}
+          onDragEnd={e => this.props.dragend(e, this)}
         />
       </Group>
     );
@@ -120,6 +130,7 @@ class Polygon extends React.Component {
 }
 
 class App extends React.Component {
+  dotsIndex = 0;
   constructor(props) {
     super(props);
     this.state = {
@@ -132,28 +143,29 @@ class App extends React.Component {
         startX: 0,
         startY: 0
       },
+      points: [],
+      polygon: {}
     }
   }
 
   handleShapeDragEnd = (e, inst) => {
-    console.log(inst);
-    inst.updatePosition(
-      e.evt.dragEndNode.attrs.x,
-      e.evt.dragEndNode.attrs.y
-    );
+    // console.log(inst);
+    const {points} = this.state;
+    // debugger
+    points.forEach((dot)=>{
+      if(inst.props.index === dot.index){
+        dot.x = e.evt.dragEndNode.attrs.x;
+        dot.y = e.evt.dragEndNode.attrs.y;
+      }
+    })
+    this.finishPolygon();
   }
 
   handleClick = (e) => {
+    const { drawingMode } = this.state;
+    if(!drawingMode) return;
+    
     const { mouse } = this.state;
-    if (!mouse.startDraw) {
-      this.setState({
-        mouse: {
-          startDraw: true
-        },
-      })
-      return;
-    }
-
 
     this.setState({
       drawing: true,
@@ -167,27 +179,42 @@ class App extends React.Component {
     let drawingPoint = <Point
       x={mouse.x}
       y={mouse.y}
+      index={this.dotsIndex}
       width={1}
       height={1}
       stroke={'black'}
       key={this.state.children.length}
       name={`shape${this.state.children.length}`}
-      draggable={false}
+      draggable={true}
       click={this.finishPolygon}
+      dragend={this.handleShapeDragEnd}
     />
+
+    let point = {
+      x: mouse.x,
+      y: mouse.y,
+      index: this.dotsIndex
+    }
 
     const { children } = this.state;
     const newChildren = R.clone(children);
     newChildren.push(drawingPoint);
 
+    const { points } = this.state;
+    const newPoints= R.clone(points);
+    newPoints.push(point);
+
     this.setState({
       children: newChildren,
+      points: newPoints,
       mouse: {
         ...this.state.mouse,
         startX: 0,
         startY: 0
       }
     });
+
+    this.dotsIndex++;
 
     /*if (!this.state.mouse.startDraw) {
       document.body.style.cursor = 'crosshair';
@@ -256,31 +283,31 @@ class App extends React.Component {
   }
 
   finishPolygon = (e) => {
-    // alert('hello');
-    console.log(this.state);
     let dots = [];
-    this.state.children.forEach((dot) => {
+    this.state.points.forEach((dot) => {
       console.log(dot);
       // alert(dot.props.x + '*' +dot.props.y);
-      dots.push(dot.props.x);
-      dots.push(dot.props.y);
+      dots.push(dot.x);
+      dots.push(dot.y);
     })
     let polygon = <Polygon
       points={dots}
     />;
-    this.state.children = [];
+    // this.state.children = [];
     const { children } = this.state;
     const newChildren = R.clone(children);
     newChildren.push(polygon);
 
     this.setState({
       children: newChildren,
+      drawingMode: false,
       mouse: {
         ...this.state.mouse,
         startDraw: false,
         startX: 0,
         startY: 0
-      }
+      },
+      polygon
     });
   }
 
