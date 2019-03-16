@@ -6,6 +6,7 @@ import { Layer, Rect, Stage, Group, Circle, Line } from 'react-konva';
 
 import { Point } from './components/konva-point.component';
 import { Polygon } from './components/konva-polygon.component';
+import { AngleCalculator } from './services/angle-calculator.service';
 import './App.css';
 
 class ColoredRect extends React.Component {
@@ -73,6 +74,7 @@ class ColoredRect extends React.Component {
 
 class App extends React.Component {
   dotsIndex = 0;
+  angleCalculator = new AngleCalculator();
   constructor(props) {
     super(props);
     this.state = {
@@ -233,7 +235,7 @@ class App extends React.Component {
   }
 
   finishPolygon = (e) => {
-    debugger
+    let angles = [];
     let dots = [];
     let konvaDots = [];
     this.dotsIndex = 0;
@@ -242,9 +244,25 @@ class App extends React.Component {
       konvaDots.push(this.createKonvaPoint(point));
       dots.push(point.x);
       dots.push(point.y);
+      let pointBefore, pointAfter;
+      if (this.dotsIndex === 0) {
+        pointBefore = this.state.points[this.state.points.length - 1];
+        pointAfter = this.state.points[this.dotsIndex + 1];
+      } else if (this.dotsIndex === (this.state.points.length - 1)) {
+        pointBefore = this.state.points[this.dotsIndex - 1];
+        pointAfter = this.state.points[0];
+      } else {
+        pointBefore = this.state.points[this.dotsIndex - 1];
+        pointAfter = this.state.points[this.dotsIndex + 1];
+      }
+      console.log(pointBefore, this.state.points[this.dotsIndex], pointAfter);
+      debugger
+      angles.push(this.angleCalculator.findAngleDegrees(pointBefore, this.state.points[this.dotsIndex], pointAfter));
+
       this.dotsIndex++;
     });
     console.log('dots', dots);
+    console.log('angles', angles);
     let polygon = <Polygon
       points={dots}
     />;
