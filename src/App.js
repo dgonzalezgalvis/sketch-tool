@@ -4,7 +4,8 @@ import * as R from 'ramda';
 import Konva from 'konva';
 import { Layer, Rect, Stage, Group, Circle, Line } from 'react-konva';
 
-import logo from './logo.svg';
+import { Point } from './components/konva-point.component';
+import { Polygon } from './components/konva-polygon.component';
 import './App.css';
 
 class ColoredRect extends React.Component {
@@ -66,68 +67,9 @@ class ColoredRect extends React.Component {
   }
 }
 
-class Point extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      color: 'red',
-      ...this.state,
-      x: this.props.x,
-      y: this.props.y,
-      index: this.props.index
-    };
-  }
 
-  updatePosition = (x, y) => {
-    this.setState({
-      ...this.state,
-      x,
-      y,
-    });
-  }
 
-  render() {
-    return (
-      <Group
-      >
-        <Circle
-          x={this.state.x}
-          y={this.state.y}
-          radius={5}
-          fill={this.state.color}
-          shadowBlur={5}
-          draggable={true}
-          onClick={this.props.click}
-          onDragEnd={e => this.props.dragend(e, this)}
-        />
-      </Group>
-    );
-  }
-}
-
-class Polygon extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      color: 'black'
-    };
-  }
-
-  render() {
-    return (
-      <Group
-      >
-        <Line
-          points={this.props.points}
-          fill={this.state.color}
-          closed={true}
-        />
-      </Group>
-    );
-  }
-}
 
 class App extends React.Component {
   dotsIndex = 0;
@@ -150,10 +92,10 @@ class App extends React.Component {
 
   handleShapeDragEnd = (e, inst) => {
     // console.log(inst);
-    const {points} = this.state;
+    const { points } = this.state;
     // debugger
-    points.forEach((dot)=>{
-      if(inst.props.index === dot.index){
+    points.forEach((dot) => {
+      if (inst.props.index === dot.index) {
         dot.x = e.evt.dragEndNode.attrs.x;
         dot.y = e.evt.dragEndNode.attrs.y;
       }
@@ -163,8 +105,8 @@ class App extends React.Component {
 
   handleClick = (e) => {
     const { drawingMode } = this.state;
-    if(!drawingMode) return;
-    
+    if (!drawingMode) return;
+
     const { mouse } = this.state;
 
     this.setState({
@@ -174,34 +116,18 @@ class App extends React.Component {
         x: mouse.x,
         y: mouse.y
       },
-    })
+    });
 
-    let drawingPoint = <Point
-      x={mouse.x}
-      y={mouse.y}
-      index={this.dotsIndex}
-      width={1}
-      height={1}
-      stroke={'black'}
-      key={this.state.children.length}
-      name={`shape${this.state.children.length}`}
-      draggable={true}
-      click={this.finishPolygon}
-      dragend={this.handleShapeDragEnd}
-    />
+    let point = this.createPoint(mouse);
 
-    let point = {
-      x: mouse.x,
-      y: mouse.y,
-      index: this.dotsIndex
-    }
+    let drawingPoint = this.createKonvaPoint(point);
 
     const { children } = this.state;
     const newChildren = R.clone(children);
     newChildren.push(drawingPoint);
 
     const { points } = this.state;
-    const newPoints= R.clone(points);
+    const newPoints = R.clone(points);
     newPoints.push(point);
 
     this.setState({
@@ -269,6 +195,30 @@ class App extends React.Component {
 
   }
 
+  createPoint(mouse) {
+    return {
+      x: mouse.x,
+      y: mouse.y,
+      index: R.clone(this.dotsIndex)
+    }
+  }
+
+  createKonvaPoint(point) {
+    return <Point
+      x={point.x}
+      y={point.y}
+      index={point.index}
+      width={1}
+      height={1}
+      stroke={'black'}
+      key={point.index}
+      name={`shape${this.state.children.length}`}
+      draggable={true}
+      click={this.finishPolygon}
+      dragend={this.handleShapeDragEnd}
+    />
+  }
+
   handleMouseMove = (e) => {
     if (this.state.drawingMode) {
       // get cursor current position
@@ -283,19 +233,24 @@ class App extends React.Component {
   }
 
   finishPolygon = (e) => {
+    debugger
     let dots = [];
-    this.state.points.forEach((dot) => {
-      console.log(dot);
-      // alert(dot.props.x + '*' +dot.props.y);
-      dots.push(dot.x);
-      dots.push(dot.y);
-    })
+    let konvaDots = [];
+    this.dotsIndex = 0;
+    console.log(this.state.points);
+    this.state.points.forEach((point) => {
+      konvaDots.push(this.createKonvaPoint(point));
+      dots.push(point.x);
+      dots.push(point.y);
+      this.dotsIndex++;
+    });
+    console.log('dots', dots);
     let polygon = <Polygon
       points={dots}
     />;
     // this.state.children = [];
-    const { children } = this.state;
-    const newChildren = R.clone(children);
+    // const { children } = this.state;
+    const newChildren = R.clone(konvaDots);
     newChildren.push(polygon);
 
     this.setState({
