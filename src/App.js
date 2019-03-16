@@ -1,76 +1,15 @@
 import React from 'react';
-import { render } from 'react-dom';
+// import { render } from 'react-dom';
 import * as R from 'ramda';
-import Konva from 'konva';
-import { Layer, Rect, Stage, Group, Circle, Line } from 'react-konva';
+// import Konva from 'konva';
+// import { Layer, Rect, Stage, Group, Circle, Line } from 'react-konva';
+import { Layer, Stage } from 'react-konva';
 
 import { Point } from './components/konva-point.component';
+import { Label } from './components/konva-label.component';
 import { Polygon } from './components/konva-polygon.component';
 import { AngleCalculator } from './services/angle-calculator.service';
 import './App.css';
-
-class ColoredRect extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      color: 'green',
-      ...this.state,
-      x: this.props.x,
-      y: this.props.y
-    };
-  }
-
-  handleClick = () => {
-    console.log('click');
-    this.setState({
-      color: Konva.Util.getRandomColor(),
-    });
-  }
-
-  handleDragBound = (pos) => {
-    const newY = pos.y < 10 ? 10 : (pos.y > window.innerHeight - 20 ? window.innerHeight - 20 : pos.y);
-    const newX = pos.x < 0 ? 10 : (pos.x > window.innerWidth - 20 ? window.innerWidth - 20 : pos.x);
-    const newPos = {
-      x: newX,
-      y: newY,
-    };
-
-    return newPos;
-  }
-
-  updatePosition = (x, y) => {
-    this.setState({
-      ...this.state,
-      x,
-      y,
-    });
-  }
-
-  render() {
-    return (
-      <Group
-      >
-        <Rect
-          x={this.state.x}
-          y={this.state.y}
-          width={this.props.width}
-          height={this.props.height}
-          fill={this.state.color}
-          shadowBlur={5}
-          draggable={true}
-          onClick={this.handleClick}
-          dragBoundFunc={this.handleDragBound}
-          onDragEnd={e => this.props.onDragEnd(e, this)}
-        />
-      </Group>
-    );
-  }
-}
-
-
-
-
 
 class App extends React.Component {
   dotsIndex = 0;
@@ -221,6 +160,14 @@ class App extends React.Component {
     />
   }
 
+  createKonvaLabel(angle) {
+    return <Label
+      x={angle.x}
+      y={angle.y}
+      text={angle.angle}
+    />
+  }
+
   handleMouseMove = (e) => {
     if (this.state.drawingMode) {
       // get cursor current position
@@ -255,9 +202,12 @@ class App extends React.Component {
         pointBefore = this.state.points[this.dotsIndex - 1];
         pointAfter = this.state.points[this.dotsIndex + 1];
       }
-      console.log(pointBefore, this.state.points[this.dotsIndex], pointAfter);
-      debugger
-      angles.push(this.angleCalculator.findAngleDegrees(pointBefore, this.state.points[this.dotsIndex], pointAfter));
+      // console.log(pointBefore, point, pointAfter);
+      angles.push(this.createKonvaLabel({
+        angle: this.angleCalculator.findAngleDegrees(pointBefore, point, pointAfter), 
+        x:point.x,
+        y:point.y
+      }));
 
       this.dotsIndex++;
     });
@@ -269,6 +219,7 @@ class App extends React.Component {
     // this.state.children = [];
     // const { children } = this.state;
     const newChildren = R.clone(konvaDots);
+    newChildren.push(...angles);
     newChildren.push(polygon);
 
     this.setState({
