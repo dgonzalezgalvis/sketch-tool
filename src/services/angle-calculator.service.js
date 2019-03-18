@@ -11,6 +11,7 @@ export class AngleCalculator {
     }
 
     findAngleDegrees(pointA, pointB, pointC) {
-        return (this.findAngle(pointA, pointB, pointC) * 180) / Math.PI;
+        let degAngle = (this.findAngle(pointA, pointB, pointC) * 180) / Math.PI;
+        return parseFloat(Math.round(degAngle * 100) / 100).toFixed(2);
     }
 }

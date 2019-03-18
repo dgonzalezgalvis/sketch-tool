@@ -25,6 +25,7 @@ export class Polygon extends React.Component {
                     points={this.props.points}
                     fill={this.state.color}
                     closed={true}
+                    opacity={0.7}
                     onClick={this.handleClick}
                 />
             </Group>

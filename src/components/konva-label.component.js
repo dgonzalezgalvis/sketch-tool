@@ -1,7 +1,7 @@
 import React from 'react';
-import { Group, Circle, Text } from 'react-konva';
+import { Group, Text } from 'react-konva';
 
-export class Point extends React.Component {
+export class Label extends React.Component {
     constructor(props) {
         super(props);
 
@@ -10,7 +10,7 @@ export class Point extends React.Component {
             ...this.state,
             x: this.props.x,
             y: this.props.y,
-            index: this.props.index
+            text: this.props.text
         };
     }
 
@@ -26,17 +26,13 @@ export class Point extends React.Component {
         return (
             <Group
             >
-                <Circle
+                <Text
                     x={this.state.x}
                     y={this.state.y}
-                    radius={5}
-                    fill={this.state.color}
-                    shadowBlur={5}
-                    draggable={true}
-                    onClick={this.props.click}
-                    onDragEnd={e => this.props.dragend(e, this)}
-                    text={this.props.index}
-                />
+                    text= {this.props.text}
+                    fontSize= {28}
+                >
+                </Text>
             </Group>
         );
     }
