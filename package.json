@@ -26,6 +26,9 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "canvas": "^2.4.0"
+    "canvas": "^2.4.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.11.2",
+    "sinon": "^7.2.7"
   }
 }

@@ -14,11 +14,16 @@ import './App.css';
 class App extends React.Component {
   dotsIndex = 0;
   angleCalculator = new AngleCalculator();
+  divStyle = {
+    borderStyle: '1px solid black',
+    backgroundColor: 'lightgray'
+  };
+  
   constructor(props) {
     super(props);
     this.state = {
       children: [],
-      drawingMode: false,
+      drawingMode: true,
       mouse: {
         startDraw: false,
         x: 0,
@@ -204,9 +209,9 @@ class App extends React.Component {
       }
       // console.log(pointBefore, point, pointAfter);
       angles.push(this.createKonvaLabel({
-        angle: this.angleCalculator.findAngleDegrees(pointBefore, point, pointAfter), 
-        x:point.x,
-        y:point.y
+        angle: this.angleCalculator.findAngleDegrees(pointBefore, point, pointAfter),
+        x: point.x,
+        y: point.y
       }));
 
       this.dotsIndex++;
@@ -215,6 +220,8 @@ class App extends React.Component {
     console.log('angles', angles);
     let polygon = <Polygon
       points={dots}
+    // onDragStart={this.handleShapeDragStart}
+    // onDragEnd={this.handleShapeDragEnd}
     />;
     // this.state.children = [];
     // const { children } = this.state;
@@ -252,17 +259,22 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <input type='button' value='start draw' onClick={this.handleStartDrawClick} />
-        <input type='button' value='stop draw' onClick={this.handleStopDrawClick} />
-        {window.innerWidth} - {window.innerHeight}
-        <Stage width={window.innerWidth} height={window.innerHeight}
-          onContentClick={this.handleClick}
-          onContentMouseMove={this.handleMouseMove}
-        >
-          <Layer ref='layer'>
-            {this.state.children}
-          </Layer>
-        </Stage>
+        {/* <input type='button' value='start draw' onClick={this.handleStartDrawClick} />
+        <input type='button' value='stop draw' onClick={this.handleStopDrawClick} /> */}
+        <h1>Canvas</h1>
+        <p>Click to draw a point anywhere; click again in any existing point to create a polygon</p>
+        <p>Canvas size:</p>{window.innerWidth} - {window.innerHeight}
+        <div style={this.divStyle}>
+          <Stage width={window.innerWidth} height={window.innerHeight}
+            onContentClick={this.handleClick}
+            onContentMouseMove={this.handleMouseMove}
+          >
+            <Layer ref='layer'>
+              {this.state.children}
+            </Layer>
+          </Stage>
+        </div>
+
       </div>
     );
   }

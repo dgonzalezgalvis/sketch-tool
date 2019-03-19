@@ -21,8 +21,7 @@ describe('Angle Calculator Service testing', function () {
             y: 100
         }
         const angle = service.findAngleDegrees(a, b, c);
-        console.log(angle);
-        expect(angle).toEqual(90);
+        expect(+angle).toEqual(90);
     });
 
     it('Calculates other angles', function () {
@@ -40,6 +39,6 @@ describe('Angle Calculator Service testing', function () {
             y: 100
         }
         const angle = service.findAngleDegrees(a, b, c);
-        expect(Math.round(angle)).toEqual(45);
+        expect(Math.round(+angle)).toEqual(45);
     });
 });
