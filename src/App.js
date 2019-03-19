@@ -87,58 +87,6 @@ class App extends React.Component {
     });
 
     this.dotsIndex++;
-
-    /*if (!this.state.mouse.startDraw) {
-      document.body.style.cursor = 'crosshair';
-      const { mouse } = this.state;
-
-      this.setState({
-        drawing: true,
-        mouse: {
-          ...this.state.mouse,
-          startDraw: true,
-          startX: mouse.x,
-          startY: mouse.y
-        },
-      })
-     
-    } else {
-      document.body.style.cursor = 'default';
-
-      const { mouse } = this.state;
-      const newWidth = Math.abs(e.evt.layerX - mouse.startX);
-      const newHeight = Math.abs(e.evt.layerY - mouse.startY);
-      const startX = (mouse.x - mouse.startX) < 0 ? mouse.x : mouse.startX;
-      const startY = (mouse.y - mouse.startY) < 0 ? mouse.y : mouse.startY;
-      
-      let drawingShape = <ColoredRect
-        x={startX}
-        y={startY}
-        width={newWidth}
-        height={newHeight}
-        stroke={'black'}
-        key={this.state.children.length}
-        name={`shape${this.state.children.length}`}
-        draggable={true}
-        // onDragStart={this.handleShapeDragStart}
-        onDragEnd={this.handleShapeDragEnd}
-      />
-
-      const { children } = this.state;
-      const newChildren = R.clone(children);
-      newChildren.push(drawingShape);
-
-      this.setState({
-        children: newChildren,
-        mouse: {
-          ...this.state.mouse,
-          startDraw: false,
-          startX: 0,
-          startY: 0         
-        }
-      });
-    }*/
-
   }
 
   createPoint(mouse) {
@@ -207,7 +155,7 @@ class App extends React.Component {
         pointBefore = this.state.points[this.dotsIndex - 1];
         pointAfter = this.state.points[this.dotsIndex + 1];
       }
-      // console.log(pointBefore, point, pointAfter);
+
       angles.push(this.createKonvaLabel({
         angle: this.angleCalculator.findAngleDegrees(pointBefore, point, pointAfter),
         x: point.x,
@@ -220,11 +168,9 @@ class App extends React.Component {
     console.log('angles', angles);
     let polygon = <Polygon
       points={dots}
-    // onDragStart={this.handleShapeDragStart}
-    // onDragEnd={this.handleShapeDragEnd}
+
     />;
-    // this.state.children = [];
-    // const { children } = this.state;
+
     const newChildren = R.clone(konvaDots);
     newChildren.push(...angles);
     newChildren.push(polygon);
@@ -259,9 +205,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        {/* <input type='button' value='start draw' onClick={this.handleStartDrawClick} />
-        <input type='button' value='stop draw' onClick={this.handleStopDrawClick} /> */}
-        <h1>Canvas</h1>
+        <h1>Sketch - Tool</h1>
         <p>Click to draw a point anywhere; click again in any existing point to create a polygon</p>
         <p>Canvas size:</p>{window.innerWidth} - {window.innerHeight}
         <div style={this.divStyle}>

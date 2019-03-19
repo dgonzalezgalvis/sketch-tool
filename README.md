@@ -1,5 +1,30 @@
 # sketch-tool
 
+![alt text](https://sketchtool.azurewebsites.net/capture.png)
+
+Canvas Sketch Tool made with [ReactJs](https://reactjs.org/) and based on [konva canvas image library](https://konvajs.org/docs/).
+
+## Demo: https://sketchtool.azurewebsites.net/
+
+### Use Instructions
+
+1. Draw some points over the gray brackground Canvas Layer.
+2. To create a Polyigon, click on the starting point; this will create a polygon enclosed by the previously drawn points.
+3. After the polygon is created, you can drag and drop the points to change the polygon vertexes. This will change the shape of the polygon and update the angle values.
+4. To change the filling color of the polygon, click inside any part of it.
+
+Have fun!
+
+### Install Instructions
+
+1. Download Code/clone repo from https://github.com/dgonzalezgalvis/sketch-tool
+2. Run a consle over the folder that contains the downloaded files and type:
+    -npm install
+    -npm start
+3. To run unit test, type:
+    -npm test
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -44,28 +69,3 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
